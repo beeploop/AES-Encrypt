@@ -11,19 +11,19 @@ const (
 	KEY_LENGTH = 32
 )
 
-type encrypt struct {
+type Encrypt struct {
 	Key []byte
 }
 
-func New(key string) (*encrypt, error) {
+func New(key []byte) (*Encrypt, error) {
 	if len(key) != KEY_LENGTH {
 		return nil, errors.New("Invalid key length")
 	}
 
-	return &encrypt{Key: []byte(key)}, nil
+	return &Encrypt{Key: []byte(key)}, nil
 }
 
-func (e *encrypt) UpdateKey(key string) error {
+func (e *Encrypt) UpdateKey(key string) error {
 	if len(key) != KEY_LENGTH {
 		return errors.New("Invalid key length")
 	}
@@ -32,7 +32,7 @@ func (e *encrypt) UpdateKey(key string) error {
 	return nil
 }
 
-func (e *encrypt) Encrypt(src []byte) ([]byte, error) {
+func (e *Encrypt) Encrypt(src []byte) ([]byte, error) {
 	block, err := aes.NewCipher(e.Key)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (e *encrypt) Encrypt(src []byte) ([]byte, error) {
 	return cipherText, nil
 }
 
-func (e *encrypt) Decrypt(src []byte) ([]byte, error) {
+func (e *Encrypt) Decrypt(src []byte) ([]byte, error) {
 	block, err := aes.NewCipher(e.Key)
 	if err != nil {
 		return nil, err
