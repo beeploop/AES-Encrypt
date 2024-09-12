@@ -10,23 +10,20 @@ import (
 	"github.com/beeploop/aes-encrypt/encrypt"
 )
 
-type CLI struct {
-	key string
-}
+type CLI struct{}
 
-func NewCLI(key string) *CLI {
-	return &CLI{
-		key: key,
-	}
+func NewCLI() *CLI {
+	return &CLI{}
 }
 
 func (c *CLI) Start() {
+	key := flag.String("key", "", "32 character AES key")
 	file := flag.String("file", "", "Input file")
 	mode := flag.String("mode", "encrypt", "operation mode encrypt/decrypt")
 	output := flag.String("output", "output", "Output file")
 
 	flag.Parse()
-	if *file == "" {
+	if *file == "" || *key == "" {
 		fmt.Println("Invalid usage")
 		flag.PrintDefaults()
 		os.Exit(1)
@@ -43,7 +40,7 @@ func (c *CLI) Start() {
 		panic(err)
 	}
 
-	crypto, err := encrypt.New(c.key)
+	crypto, err := encrypt.New(*key)
 	if err != nil {
 		panic(err)
 	}
